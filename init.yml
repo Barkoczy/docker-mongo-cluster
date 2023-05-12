@@ -5,22 +5,22 @@ services:
     image: mongo
     restart: "no"
     command: >
-      mongosh --host mongodb0:27017 -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD}  --eval 
+      mongosh --host mongodb0:${NODE_0_PORT} -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD}  --eval 
       '
       rs.initiate({
         "_id" : "rs0",
         "members" : [
           {
             "_id" : 0,
-            "host" : "mongodb0:27017"
+            "host" : "mongodb0:${NODE_0_PORT}"
           },
           {
             "_id" : 1,
-            "host" : "mongodb1:27017"
+            "host" : "mongodb1:${NODE_1_PORT}"
           },
           {
             "_id" : 2,
-            "host" : "mongodb2:27017"
+            "host" : "mongodb2:${NODE_2_PORT}"
           }
         ]
       });

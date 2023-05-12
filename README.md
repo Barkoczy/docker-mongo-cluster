@@ -46,13 +46,13 @@ NODE_2_PORT=30300
 openssl rand -base64 756 > mongodb.key
 ```
 
-### Create cluster
+### Create cluster with healthcheck for initialize cluster nodes [master > two slave]
 
 ```shell
 docker compose -f cluster.yml up
 ```
 
-### After was cluster created execute initialize file
+### Or you can remove healthcheck and execute initialize file just once after was cluster created
 
 ```shell
 docker compose -f init.yml up
@@ -64,10 +64,16 @@ docker compose -f init.yml up
 docker compose ps
 ```
 
-### URI
+### URI Connect to replicaSet
 
 ```shell
-mongodb://root:password@mongodb0:30100/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2
+mongodb://root:password@mongodb0:30100,mongodb1:30200,mongodb2:30300/?replicaSet=rs0
+```
+
+### URI Connect user on single node (master ~ slave node)
+
+```shell
+mongodb://root:password@mongodb0:30100/?directConnection=true
 ```
 
 ### Create user

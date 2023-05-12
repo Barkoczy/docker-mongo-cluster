@@ -1,50 +1,48 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb0:
-    hostname: mongodb0
+    container_name: mongodb0
     build:
       context: ./
       dockerfile: Dockerfile
     restart: always
-    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    command: ["--replSet", "rs0", "--keyFile", "/etc/mongodb.key", "--bind_ip_all", "--port", "${NODE_0_PORT}", "--wiredTigerCacheSizeGB", "2"]
     env_file:
       - .env
-    expose:
-      - 27017
     ports:
-      - ${NODE_0_PORT}:27017
+      - ${NODE_0_PORT}:${NODE_0_PORT}
     volumes:
       - ./volumes/mongodb0:/data/db
+    healthcheck:
+      test: test $$(echo "rs.initiate({_id:'rs0',members:[{_id:0,host:\"mongodb0:${NODE_0_PORT}\"},{_id:1,host:\"mongodb1:${NODE_1_PORT}\"},{_id:2,host:\"mongodb2:${NODE_2_PORT}\"}]}).ok || rs.status().ok" | mongosh --host mongodb0:${NODE_0_PORT} -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
 
   mongodb1:
-    hostname: mongodb1
+    container_name: mongodb1
     build:
       context: ./
       dockerfile: Dockerfile
     restart: always
-    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    command: ["--replSet", "rs0", "--keyFile", "/etc/mongodb.key", "--bind_ip_all", "--port", "${NODE_1_PORT}", "--wiredTigerCacheSizeGB", "2"]
     env_file:
       - .env
-    expose:
-      - 27017
     ports:
-      - ${NODE_1_PORT}:27017
+      - ${NODE_1_PORT}:${NODE_1_PORT}
     volumes:
       - ./volumes/mongodb1:/data/db
 
   mongodb2:
-    hostname: mongodb2
+    container_name: mongodb2
     build:
       context: ./
       dockerfile: Dockerfile
     restart: always
-    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    command: ["--replSet", "rs0", "--keyFile", "/etc/mongodb.key", "--bind_ip_all", "--port", "${NODE_2_PORT}", "--wiredTigerCacheSizeGB", "2"]
     env_file:
       - .env
-    expose:
-      - 27017
     ports:
-      - ${NODE_2_PORT}:27017
+      - ${NODE_2_PORT}:${NODE_2_PORT}
     volumes:
       - ./volumes/mongodb2:/data/db
