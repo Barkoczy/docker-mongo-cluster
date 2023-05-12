@@ -1,14 +1,28 @@
-# Docker mongo cluster
+# Mongo Cluster
 
-Example for mongo cluster via docker
+Example for mongo cluster using Docker with minimal configuration required.
 
-## Make .env file
+## Disclaimer
+> :warning: **This setup is purely for local development purposes.**
+>
+> This setup should not be used for production applications as it was not built with that in mind.
+
+### Are there any prerequisites?
+* Docker Compose
+* The following in your `/etc/hosts` file:
+```
+127.0.0.1       mongodb0
+127.0.0.1       mongodb1
+127.0.0.1       mongodb2
+```
+
+### Make .env file
 
 ```shell
 cp .env.example .env
 ```
 
-## Edit .env file (vim, nano.. your favorite choice)
+### Edit .env file (vim, nano.. your favorite choice)
 
 Open enviroment file
 
@@ -16,38 +30,47 @@ Open enviroment file
 vim .env
 ```
 
-Edit enviroment file
+Edit enviroment file. Enter your password and edit default setup values if u need
 
 ```shell
-MONGODB_ROOT_PASSWORD=
-MONGODB_REPLICA_SET_KEY=
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_INITDB_ROOT_PASSWORD=password
+NODE_0_PORT=30100
+NODE_1_PORT=30200
+NODE_2_PORT=30300
 ```
 
-## Run
+### Generate mongodb.key file [Create a keyfile](https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control)
 
 ```shell
-docker-compose up -d
+openssl rand -base64 756 > mongodb.key
 ```
 
-## Down
+### Create cluster
 
 ```shell
-docker-compose down
+docker compose -f cluster.yml up
 ```
 
-## Check
+### After initialize cluster execute initialize cluster
 
 ```shell
-docker-compose ps
+docker compose -f init.yml up
 ```
 
-## URI
+### Check
 
 ```shell
-mongodb://root:pxMa6XMmXjQmFQbzfPn4eFYx@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2
+docker compose ps
 ```
 
-## Create user
+### URI
+
+```shell
+mongodb://root:password@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2
+```
+
+### Create user
 
 ```shell
 use <database>

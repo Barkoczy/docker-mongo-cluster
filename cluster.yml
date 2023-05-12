@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mongodb0:
+    hostname: mongodb0
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    env_file:
+      - .env
+    expose:
+      - 27017
+    ports:
+      - ${NODE_0_PORT}:27017
+    volumes:
+      - ./volumes/mongodb0:/data/db
+
+  mongodb1:
+    hostname: mongodb1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    env_file:
+      - .env
+    expose:
+      - 27017
+    ports:
+      - ${NODE_0_PORT}:27017
+    volumes:
+      - ./volumes/mongodb1:/data/db
+
+  mongodb2:
+    hostname: mongodb2
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB 2 --setParameter authenticationMechanisms=SCRAM-SHA-1
+    env_file:
+      - .env
+    expose:
+      - 27017
+    ports:
+      - ${NODE_0_PORT}:27017
+    volumes:
+      - ./volumes/mongodb2:/data/db
