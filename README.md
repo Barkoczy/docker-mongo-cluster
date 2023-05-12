@@ -52,7 +52,7 @@ openssl rand -base64 756 > mongodb.key
 docker compose -f cluster.yml up
 ```
 
-### After initialize cluster execute initialize cluster
+### After was cluster created execute initialize file
 
 ```shell
 docker compose -f init.yml up
