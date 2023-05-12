@@ -29,7 +29,7 @@ services:
     expose:
       - 27017
     ports:
-      - ${NODE_0_PORT}:27017
+      - ${NODE_1_PORT}:27017
     volumes:
       - ./volumes/mongodb1:/data/db
 
@@ -45,6 +45,6 @@ services:
     expose:
       - 27017
     ports:
-      - ${NODE_0_PORT}:27017
+      - ${NODE_2_PORT}:27017
     volumes:
       - ./volumes/mongodb2:/data/db
